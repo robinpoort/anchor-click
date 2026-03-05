@@ -52,7 +52,9 @@ export default [
         window: 'readonly',
         document: 'readonly',
         __dirname: 'readonly',
-        PointerEvent: 'readonly'
+        PointerEvent: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly'
       }
     }
   }
