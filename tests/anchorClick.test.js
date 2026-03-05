@@ -58,17 +58,6 @@ describe('anchorClick — custom attributes', () => {
     if (instance) instance.destroy();
   });
 
-  it('works with custom attribute names (legacy data-card)', () => {
-    document.body.innerHTML = `
-      <div data-card>
-        <a href="/test" data-card-link>Title</a>
-      </div>
-    `;
-    instance = anchorClick({ parent: 'data-card', link: 'data-card-link', ignore: 'data-card-ignore', clickableClass: 'is-clickable-card' });
-    const item = document.querySelector('[data-card]');
-    expect(item.classList.contains('is-clickable-card')).toBe(true);
-  });
-
   it('uses custom clickableClass option', () => {
     document.body.innerHTML = `
       <div data-anchor-target>

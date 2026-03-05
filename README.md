@@ -53,17 +53,6 @@ const instance = anchorClick({
 });
 ```
 
-### Legacy / custom attribute names
-
-```js
-anchorClick({
-  parent: 'data-card',
-  link: 'data-card-link',
-  ignore: 'data-card-ignore',
-  clickableClass: 'is-clickable-card'
-});
-```
-
 ## destroy()
 
 `anchorClick()` returns an instance with a `destroy()` method that removes all event listeners, disconnects the MutationObserver and removes `clickableClass` from all items. Useful in SPAs or when switching configurations.
