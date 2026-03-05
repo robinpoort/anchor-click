@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>anchor-click — Visual Test</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header id="site-header">
+    <div class="header-inner">
+      <strong>anchor-click</strong>
+      <span style="font-size: 0.85rem; opacity: 0.7;">Visual test page</span>
+    </div>
+  </header>
+
+  <main>
+
+    <h2 class="section-heading">Basic usage</h2>
+
+    <!-- ==============================
+         1. Basic card
+         ============================== -->
+    <section class="test-section">
+      <h2>Basic card</h2>
+      <p>The entire card is clickable via <code>data-card</code> + <code>data-card-link</code>. Click anywhere on the card (not just the title link) to navigate.</p>
+      <div class="card-grid">
+        <div class="card" data-card>
+          <h3><a href="#basic-1" data-card-link>Card title</a></h3>
+          <p>Click anywhere on this card. It will navigate to the link in the heading.</p>
+          <div class="card-meta">
+            <span>Category</span>
+            <span>·</span>
+            <span>5 min read</span>
+          </div>
+        </div>
+        <div class="card" data-card>
+          <h3><a href="#basic-2" data-card-link>Another card</a></h3>
+          <p>This card also has a <code>data-card-link</code> and is fully clickable.</p>
+          <div class="card-meta">
+            <span>Category</span>
+            <span>·</span>
+            <span>3 min read</span>
+          </div>
+        </div>
+        <div class="card card-no-link" data-card>
+          <h3>Card without link</h3>
+          <p>This card has <code>data-card</code> but no <code>data-card-link</code>, so it does not become clickable.</p>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="section-heading">Named links</h2>
+
+    <!-- ==============================
+         2. Named card link
+         ============================== -->
+    <section class="test-section">
+      <h2>Named card link</h2>
+      <p>When a card contains multiple links, use <code>data-card="name"</code> and <code>data-card-link="name"</code> to designate the primary link. The other links remain independently clickable.</p>
+      <div class="card-grid">
+        <div class="card card-named" data-card="primary">
+          <h3><a href="#named-primary" data-card-link="primary">Primary link</a></h3>
+          <p>Clicking the card background navigates to the primary link.</p>
+          <div class="card-meta">
+            <a href="#named-secondary">Secondary link</a>
+            <span>·</span>
+            <a href="#named-tertiary">Tertiary link</a>
+          </div>
+        </div>
+        <div class="card card-named" data-card="secondary">
+          <h3><a href="#named-other">Other link</a></h3>
+          <p>Here the <em>second</em> link is the primary target.</p>
+          <div class="card-meta">
+            <a href="#named-secondary-target" data-card-link="secondary">This is the primary target</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="section-heading">Ignored elements</h2>
+
+    <!-- ==============================
+         3. data-card-ignore
+         ============================== -->
+    <section class="test-section">
+      <h2>Ignored elements</h2>
+      <p>Buttons and elements with <code>data-card-ignore</code> do not trigger card navigation. Buttons and anchor tags are always ignored automatically.</p>
+      <div class="card-grid">
+        <div class="card card-ignore" data-card>
+          <h3><a href="#ignore-primary" data-card-link>Card title</a></h3>
+          <p>The button below does not trigger navigation.</p>
+          <div class="card-meta">
+            <button onclick="log('Button clicked (not card navigation)')">Action button</button>
+          </div>
+        </div>
+        <div class="card card-ignore" data-card>
+          <h3><a href="#ignore-primary-2" data-card-link>Card title</a></h3>
+          <p>The element below has <code>data-card-ignore</code> and does not trigger navigation.</p>
+          <div class="card-meta">
+            <span data-card-ignore style="cursor: default; background: #fff3cd; padding: 0.2rem 0.5rem; border-radius: 3px;">Ignored area</span>
+          </div>
+        </div>
+        <div class="card card-ignore" data-card>
+          <h3><a href="#ignore-primary-3" data-card-link>Card title</a></h3>
+          <p>A secondary anchor tag is always ignored automatically — it navigates independently.</p>
+          <div class="card-meta">
+            <a href="#ignore-secondary">Independent link</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="section-heading">Dynamic cards</h2>
+
+    <!-- ==============================
+         4. Dynamically added cards
+         ============================== -->
+    <section class="test-section">
+      <h2>Dynamically added cards</h2>
+      <p>Cards added to the DOM after page load are handled automatically via <code>MutationObserver</code>. Click the button to add a new card and verify it becomes clickable.</p>
+      <div class="button-row">
+        <button onclick="addCard()">Add card</button>
+        <button onclick="clearCards()">Clear</button>
+      </div>
+      <div class="card-grid" id="dynamic-cards" style="margin-top: 1rem;"></div>
+    </section>
+
+    <!-- ==============================
+         Log
+         ============================== -->
+    <section class="test-section">
+      <h2>Navigation log</h2>
+      <p>Every navigation attempt is intercepted here so the page doesn't actually navigate during testing.</p>
+      <div class="log" id="log">
+        <div class="log-empty">No clicks yet…</div>
+      </div>
+      <div class="button-row">
+        <button onclick="clearLog()">Clear log</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="src/anchorClick.js"></script>
+  <script>
+    // ==============================
+    // Intercept all navigations for demo purposes
+    // ==============================
+
+    const logEl = document.getElementById('log');
+
+    function log(msg) {
+      const empty = logEl.querySelector('.log-empty');
+      if (empty) empty.remove();
+      const entry = document.createElement('div');
+      entry.textContent = msg;
+      logEl.prepend(entry);
+      while (logEl.children.length > 50) {
+        logEl.removeChild(logEl.lastChild);
+      }
+    }
+
+    function clearLog() {
+      logEl.innerHTML = '<div class="log-empty">No clicks yet…</div>';
+    }
+
+    // Intercept anchor clicks so the page doesn't actually navigate
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a[href]');
+      if (link && !e.ctrlKey && e.which !== 2) {
+        e.preventDefault();
+        log(`Navigated to: ${link.getAttribute('href')}`);
+      }
+    });
+
+    // ==============================
+    // Dynamic cards
+    // ==============================
+
+    let cardCount = 0;
+
+    function addCard() {
+      cardCount++;
+      const container = document.getElementById('dynamic-cards');
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.setAttribute('data-card', '');
+      card.innerHTML = `
+        <h3><a href="#dynamic-${cardCount}" data-card-link>Dynamic card ${cardCount}</a></h3>
+        <p>Added after page load. Should be immediately clickable.</p>
+      `;
+      container.appendChild(card);
+
+      // Give the MutationObserver a tick to process, then check
+      setTimeout(() => {
+        const isClickable = card.classList.contains('is-clickable-card');
+        log(`Card ${cardCount} added — is-clickable-card: ${isClickable}`);
+      }, 50);
+    }
+
+    function clearCards() {
+      document.getElementById('dynamic-cards').innerHTML = '';
+      cardCount = 0;
+      log('Dynamic cards cleared');
+    }
+
+    // ==============================
+    // Show is-clickable-card badges
+    // ==============================
+
+    function updateBadges() {
+      document.querySelectorAll('[data-card]').forEach((card) => {
+        let badge = card.querySelector('.badge');
+        if (!badge) {
+          badge = document.createElement('span');
+          badge.className = 'badge';
+          card.appendChild(badge);
+        }
+        const clickable = card.classList.contains('is-clickable-card');
+        badge.className = `badge ${clickable ? 'badge-clickable' : 'badge-not-clickable'}`;
+        badge.textContent = clickable ? 'is-clickable-card ✓' : 'not clickable';
+      });
+
+      requestAnimationFrame(updateBadges);
+    }
+
+    updateBadges();
+  </script>
+
+</body>
+</html>

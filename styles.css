@@ -1,0 +1,261 @@
+/* ==============================
+   Reset & Base
+   ============================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #f5f5f5;
+}
+
+a {
+  color: #0a6abf;
+}
+
+code {
+  background: #f0f0f0;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+/* ==============================
+   Header
+   ============================== */
+
+#site-header {
+  background: #1a1a2e;
+  color: #fff;
+  padding: 1rem 1.5rem;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ==============================
+   Main
+   ============================== */
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* ==============================
+   Test Sections
+   ============================== */
+
+.test-section {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.test-section h2 {
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+  font-size: 1.1rem;
+}
+
+.test-section > p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.test-section code {
+  background: #f0f0f0;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+.section-heading {
+  font-size: 1.3rem;
+  margin: 2rem 0 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #ddd;
+}
+
+/* ==============================
+   Cards
+   ============================== */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  background: #e8f4f8;
+  border: 2px solid #b8d8e8;
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.card h3 a {
+  text-decoration: none;
+  color: #1a1a1a;
+}
+
+.card p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #555;
+}
+
+.card .card-meta {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: #888;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.card .card-meta a {
+  font-size: 0.75rem;
+}
+
+.is-clickable-card {
+  cursor: pointer;
+}
+
+.is-clickable-card:hover {
+  background: #d0ecf4;
+  border-color: #7bbdd4;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Card without link */
+.card-no-link {
+  background: #f5f5f5;
+  border-color: #ddd;
+  opacity: 0.7;
+}
+
+/* Named link card */
+.card-named {
+  background: #f0e8f8;
+  border-color: #d0b8e8;
+}
+
+.card-named.is-clickable-card:hover {
+  background: #e4d4f4;
+  border-color: #b898d8;
+}
+
+/* Ignore demo card */
+.card-ignore {
+  background: #e8f8e8;
+  border-color: #a8d8a8;
+}
+
+.card-ignore.is-clickable-card:hover {
+  background: #d4f0d4;
+  border-color: #88c888;
+}
+
+/* ==============================
+   Buttons
+   ============================== */
+
+.button-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+button {
+  background: #1a1a2e;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.15s;
+}
+
+button:hover {
+  background: #16213e;
+}
+
+button:active {
+  background: #0f3460;
+}
+
+/* ==============================
+   Log
+   ============================== */
+
+.log {
+  background: #1a1a2e;
+  color: #7ec8e3;
+  font-family: "SF Mono", "Fira Code", "Fira Mono", monospace;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  padding: 1rem;
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 1rem;
+}
+
+.log div {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.1rem 0;
+}
+
+.log-empty {
+  color: rgba(126, 200, 227, 0.4);
+  font-style: italic;
+}
+
+/* ==============================
+   Badge
+   ============================== */
+
+.badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.badge-clickable {
+  background: #d4edda;
+  color: #155724;
+}
+
+.badge-not-clickable {
+  background: #f8d7da;
+  color: #721c24;
+}

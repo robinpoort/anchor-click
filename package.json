@@ -1,0 +1,41 @@
+{
+  "name": "anchor-click",
+  "version": "1.0.0",
+  "description": "Make entire card elements clickable by delegating clicks to an anchor link within",
+  "main": "dist/anchorClick.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node build.js",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "prepare": "node build.js"
+  },
+  "keywords": [
+    "anchor",
+    "card",
+    "click",
+    "clickable",
+    "link"
+  ],
+  "author": "Robin Poort",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robinpoort/anchor-click.git"
+  },
+  "bugs": {
+    "url": "https://github.com/robinpoort/anchor-click/issues"
+  },
+  "homepage": "https://github.com/robinpoort/anchor-click#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "eslint": "^9.18.0",
+    "happy-dom": "^16.7.0",
+    "terser": "^5.37.0",
+    "vitest": "^3.0.0"
+  }
+}
