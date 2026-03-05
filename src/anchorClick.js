@@ -33,9 +33,15 @@
     var observer;
     var onPointerDown;
     var onPointerUp;
+    var onPointerCancel;
 
     function handleItem(item) {
-      var link = item.querySelector('[' + linkAttr + ']');
+      var link;
+      try {
+        link = item.querySelector('[' + linkAttr + ']');
+      } catch (e) {
+        return;
+      }
       if (link !== null) {
         item.classList.add(clickableClass);
       } else {
@@ -157,8 +163,13 @@
         }
       };
 
+      onPointerCancel = function () {
+        down = undefined;
+      };
+
       window.addEventListener('pointerdown', onPointerDown);
       window.addEventListener('pointerup', onPointerUp);
+      window.addEventListener('pointercancel', onPointerCancel);
     }
 
     if (!document.body) {
@@ -180,6 +191,10 @@
         if (onPointerUp) {
           window.removeEventListener('pointerup', onPointerUp);
           onPointerUp = null;
+        }
+        if (onPointerCancel) {
+          window.removeEventListener('pointercancel', onPointerCancel);
+          onPointerCancel = null;
         }
         document.querySelectorAll('[' + parentAttr + ']').forEach(function (item) {
           item.classList.remove(clickableClass);

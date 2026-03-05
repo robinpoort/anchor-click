@@ -24,7 +24,7 @@
          ============================== -->
     <section class="test-section">
       <h2>Basic item</h2>
-      <p>The entire item is clickable via <code>data-anchor</code> + <code>data-anchor</code>. Click anywhere on the item (not just the title link) to navigate.</p>
+      <p>The entire item is clickable via <code>data-anchor-target</code> + <code>data-anchor</code>. Click anywhere on the item (not just the title link) to navigate.</p>
       <div class="item-grid">
         <div class="item" data-anchor-target>
           <h3><a href="#basic-1" data-anchor>Item title</a></h3>
@@ -46,7 +46,7 @@
         </div>
         <div class="item item-no-link" data-anchor-target>
           <h3>Item without link</h3>
-          <p>This item has <code>data-anchor</code> but no <code>data-anchor</code>, so it does not become clickable.</p>
+          <p>This item has <code>data-anchor-target</code> but no <code>data-anchor</code>, so it does not become clickable.</p>
         </div>
       </div>
     </section>
@@ -58,9 +58,9 @@
          ============================== -->
     <section class="test-section">
       <h2>Named link</h2>
-      <p>When an item contains multiple links, use <code>data-anchor="name"</code> and <code>data-anchor="name"</code> to designate the primary link. The other links remain independently clickable.</p>
+      <p>When an item contains multiple links, use <code>data-anchor-target="name"</code> and <code>data-anchor="name"</code> to designate the primary link. The other links remain independently clickable.</p>
       <div class="item-grid">
-        <div class="item item-named" data-anchor="primary">
+        <div class="item item-named" data-anchor-target="primary">
           <h3><a href="#named-primary" data-anchor="primary">Primary link</a></h3>
           <p>Clicking the item background navigates to the primary link.</p>
           <div class="item-meta">
@@ -69,7 +69,7 @@
             <a href="#named-tertiary">Tertiary link</a>
           </div>
         </div>
-        <div class="item item-named" data-anchor="secondary">
+        <div class="item item-named" data-anchor-target="secondary">
           <h3><a href="#named-other">Other link</a></h3>
           <p>Here the <em>second</em> link is the primary target.</p>
           <div class="item-meta">
@@ -132,7 +132,7 @@
          ============================== -->
     <section class="test-section">
       <h2>Attribute changes</h2>
-      <p>Adding or removing <code>data-anchor</code> or <code>data-anchor</code> on existing elements is detected automatically — no re-initialisation needed.</p>
+      <p>Adding or removing <code>data-anchor-target</code> or <code>data-anchor</code> on existing elements is detected automatically — no re-initialisation needed.</p>
       <div class="item-grid">
         <div class="item" id="attr-item">
           <h3>This item has no attributes yet</h3>
