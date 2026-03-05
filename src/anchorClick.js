@@ -87,6 +87,9 @@
       });
 
       onPointerDown = function (event) {
+        if (!event.isPrimary) {
+          return;
+        }
         if (event.button !== undefined && event.button !== 0 && event.button !== 1) {
           return;
         }
@@ -94,6 +97,11 @@
       };
 
       onPointerUp = function (event) {
+        // Ignore non-primary pointers (multi-touch)
+        if (!event.isPrimary) {
+          return;
+        }
+
         // Ignore right-click
         if (event.button === 2) {
           return;
@@ -113,9 +121,14 @@
         }
 
         var itemValue = item.getAttribute(parentAttr);
-        var link = itemValue && itemValue.length > 0
-          ? item.querySelector('[' + linkAttr + '="' + itemValue + '"]')
-          : item.querySelector('[' + linkAttr + ']');
+        var link;
+        try {
+          link = itemValue && itemValue.length > 0
+            ? item.querySelector('[' + linkAttr + '="' + itemValue + '"]')
+            : item.querySelector('[' + linkAttr + ']');
+        } catch (e) {
+          return;
+        }
 
         if (!link) {
           return;
@@ -126,7 +139,7 @@
             config.onClick(item, link);
           }
           if (event.ctrlKey || event.metaKey || event.button === 1) {
-            window.open(link.href || link);
+            window.open(link.href);
           } else {
             link.click();
           }

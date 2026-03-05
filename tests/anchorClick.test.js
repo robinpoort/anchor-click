@@ -92,8 +92,8 @@ describe('anchorClick — custom attributes', () => {
     const link = document.querySelector('[data-anchor-click]');
 
     // Simulate a fast pointerdown + pointerup
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
-    item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }));
+    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
+    item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
 
     expect(onClick).toHaveBeenCalledWith(item, link);
   });
