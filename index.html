@@ -316,6 +316,12 @@
         badge.textContent = clickable ? 'is-clickable ✓' : 'not clickable';
       });
 
+      document.querySelectorAll('.badge').forEach((badge) => {
+        if (!badge.closest('[data-anchor-parent]')) {
+          badge.remove();
+        }
+      });
+
       requestAnimationFrame(updateBadges);
     }
 

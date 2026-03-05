@@ -64,7 +64,11 @@
           } else if (mutation.type === 'attributes') {
             var target = mutation.target;
             if (mutation.attributeName === parentAttr) {
-              handleItem(target);
+              if (target.hasAttribute(parentAttr)) {
+                handleItem(target);
+              } else {
+                target.classList.remove(clickableClass);
+              }
             } else if (mutation.attributeName === linkAttr) {
               var parent = target.closest('[' + parentAttr + ']');
               if (parent) {
