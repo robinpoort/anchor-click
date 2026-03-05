@@ -1,6 +1,6 @@
 # anchor-click
 
-Makes entire items clickable by delegating clicks to an anchor link within. Useful for layouts where you want a large clickable area without wrapping everything in an `<a>` tag (which is invalid HTML for block-level content).
+Makes entire items clickable by delegating clicks to an anchor link within. Useful for layouts where you want a large clickable area while still keeping a single, explicit primary link target in complex card markup.
 
 Handles text selection (no accidental navigation), Ctrl+click and middle-click (opens in new tab), touch and pointer devices, and dynamically added items via MutationObserver.
 
@@ -66,7 +66,7 @@ instance.destroy();
 
 ## onClick callback
 
-Use `onClick` to run custom logic when an item is navigated to — useful for analytics, state updates or preventing default navigation:
+Use `onClick` to run custom logic when an item is navigated to — useful for analytics or state updates:
 
 ```js
 anchorClick({
