@@ -93,7 +93,7 @@
         if (event.button !== undefined && event.button !== 0 && event.button !== 1) {
           return;
         }
-        down = Number(new Date());
+        down = Date.now();
       };
 
       onPointerUp = function (event) {
@@ -107,14 +107,19 @@
           return;
         }
 
-        // Ignore direct clicks on anchors and buttons
-        if (event.target.hasAttribute('href') || event.target.tagName === 'BUTTON') {
+        // Ignore clicks on or inside interactive elements
+        if (event.target.closest('button, input, select, textarea')) {
           return;
         }
 
-        var up = Number(new Date());
+        var up = Date.now();
         var item = event.target.closest('[' + parentAttr + ']');
-        var ignore = event.target.closest('[' + ignoreAttr + '], [href]:not([' + linkAttr + '])');
+        var ignore;
+        try {
+          ignore = event.target.closest('[' + ignoreAttr + '], [href]:not([' + linkAttr + '])');
+        } catch (e) {
+          return;
+        }
 
         if (!item) {
           return;
