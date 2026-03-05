@@ -4,6 +4,14 @@
   "description": "Make entire item elements clickable by delegating clicks to an anchor link within",
   "main": "dist/anchorClick.js",
   "types": "dist/anchorClick.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/anchorClick.d.ts",
+      "require": "./dist/anchorClick.js",
+      "import": "./dist/anchorClick.js",
+      "default": "./dist/anchorClick.js"
+    }
+  },
   "files": [
     "dist",
     "README.md",
