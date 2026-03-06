@@ -459,4 +459,14 @@ describe('anchorClick — build and runtime safety', () => {
     expect(() => vm.runInNewContext(source, context)).not.toThrow();
     expect(typeof context.module.exports).toBe('function');
   });
+
+  it('dist/anchorClick.esm.js exports a function as default', () => {
+    const esmSource = readFileSync(resolve('dist/anchorClick.esm.js'), 'utf8');
+
+    // Must start with the factory assignment (build.js string-slice is intact)
+    expect(esmSource).toMatch(/^const anchorClick = \(function \(window\)/);
+
+    // Must end with a proper default export
+    expect(esmSource).toMatch(/export default anchorClick;\s*$/);
+  });
 });

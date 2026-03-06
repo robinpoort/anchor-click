@@ -66,7 +66,7 @@ instance.destroy();
 
 ## onClick callback
 
-Use `onClick` to run custom logic when an item is navigated to — useful for analytics or state updates:
+Use `onClick` to run custom logic when an item is navigated to — useful for analytics or state updates. The callback fires before navigation and cannot cancel it:
 
 ```js
 anchorClick({
@@ -102,6 +102,7 @@ Buttons and anchor tags are always ignored automatically.
 
 ## Behaviour
 
+- **Keyboard accessibility** — keyboard users navigate via the inner `<a>` directly; the library does not add keyboard activation to the container element.
 - **Touch & pointer support** — uses `pointerdown`/`pointerup` so mouse, touch and stylus all work.
 - **Text selection** — clicking and dragging to select text does not trigger navigation (threshold: 200ms).
 - **Ctrl/Meta+click / middle-click** — opens the link in a new tab with `noopener,noreferrer`.
