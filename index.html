@@ -92,7 +92,7 @@
           <h3><a href="#ignore-primary" data-anchor>Item title</a></h3>
           <p>The button below does not trigger navigation.</p>
           <div class="item-meta">
-            <button onclick="log('Button clicked (not item navigation)')">Action button</button>
+            <button id="btn-action">Action button</button>
           </div>
         </div>
         <div class="item item-ignore" data-anchor-target>
@@ -121,8 +121,8 @@
       <h2>Dynamically added items</h2>
       <p>Items added to the DOM after page load are handled automatically via <code>MutationObserver</code>. Click the button to add a new item and verify it becomes clickable.</p>
       <div class="button-row">
-        <button onclick="addItem()">Add item</button>
-        <button onclick="clearItems()">Clear</button>
+        <button id="btn-add-item">Add item</button>
+        <button id="btn-clear-items">Clear</button>
       </div>
       <div class="item-grid" id="dynamic-items" style="margin-top: 1rem;"></div>
     </section>
@@ -143,12 +143,12 @@
         </div>
       </div>
       <div class="button-row">
-        <button onclick="addParentAttr()">Add <code>data-anchor-target</code></button>
-        <button onclick="removeParentAttr()">Remove <code>data-anchor-target</code></button>
+        <button id="btn-add-parent">Add <code>data-anchor-target</code></button>
+        <button id="btn-remove-parent">Remove <code>data-anchor-target</code></button>
       </div>
       <div class="button-row">
-        <button onclick="addLinkAttr()">Add <code>data-anchor</code> to link</button>
-        <button onclick="removeLinkAttr()">Remove <code>data-anchor</code> from link</button>
+        <button id="btn-add-link">Add <code>data-anchor</code> to link</button>
+        <button id="btn-remove-link">Remove <code>data-anchor</code> from link</button>
       </div>
     </section>
 
@@ -173,8 +173,8 @@
       <h2>Destroy / re-init</h2>
       <p><code>anchorClick()</code> returns an instance with a <code>destroy()</code> method that removes all event listeners, disconnects the MutationObserver and removes <code>is-clickable</code> from all items.</p>
       <div class="button-row">
-        <button onclick="destroyInstance()">destroy()</button>
-        <button onclick="reinitInstance()">Re-init</button>
+        <button id="btn-destroy">destroy()</button>
+        <button id="btn-reinit">Re-init</button>
       </div>
     </section>
 
@@ -189,41 +189,43 @@
 
   <script src="src/anchorClick.js"></script>
   <script>
-    // Default init — returns an instance with destroy()
-    let instance = anchorClick();
-
-    // Separate instance for the onClick callback demo (uses custom attribute names)
-    anchorClick({
-      parent: 'data-callback-item',
-      link: 'data-callback-link',
-      onClick: (item, link) => {
-        log(`onClick: href=${link.getAttribute('href')}`);
-      }
-    });
-  </script>
-  <script>
     // ==============================
-    // Intercept all navigations for demo purposes
+    // Log
     // ==============================
 
     const logEl = document.getElementById('log');
     const logEntries = document.getElementById('log-entries');
 
-    document.getElementById('log-clear-btn').addEventListener('click', () => {
-      logEntries.innerHTML = '';
-      logEl.classList.remove('is-visible');
-    });
-
-    function log(msg) {
+    const log = (msg) => {
       logEl.classList.add('is-visible');
       const entry = document.createElement('div');
       entry.className = 'log-entry';
       entry.textContent = msg;
       logEntries.append(entry);
       logEntries.scrollTop = logEntries.scrollHeight;
-    }
+    };
 
-    // Intercept anchor clicks so the page doesn't actually navigate
+    document.getElementById('log-clear-btn').addEventListener('click', () => {
+      logEntries.innerHTML = '';
+      logEl.classList.remove('is-visible');
+    });
+
+    // ==============================
+    // Init
+    // ==============================
+
+    let instance = anchorClick();
+
+    anchorClick({
+      parent: 'data-callback-item',
+      link: 'data-callback-link',
+      onClick: (item, link) => log(`onClick: href=${link.getAttribute('href')}`)
+    });
+
+    // ==============================
+    // Intercept navigations for demo purposes
+    // ==============================
+
     document.addEventListener('click', (e) => {
       const link = e.target.closest('a[href]');
       if (link && !e.ctrlKey && e.button !== 2) {
@@ -238,7 +240,7 @@
 
     let itemCount = 0;
 
-    function addItem() {
+    document.getElementById('btn-add-item').addEventListener('click', () => {
       itemCount++;
       const container = document.getElementById('dynamic-items');
       const item = document.createElement('div');
@@ -249,66 +251,65 @@
         <p>Added after page load. Should be immediately clickable.</p>
       `;
       container.appendChild(item);
+      setTimeout(() => log(`Item ${itemCount} added — is-clickable: ${item.classList.contains('is-clickable')}`), 50);
+    });
 
-      setTimeout(() => {
-        const isClickable = item.classList.contains('is-clickable');
-        log(`Item ${itemCount} added — is-clickable: ${isClickable}`);
-      }, 50);
-    }
-
-    function clearItems() {
+    document.getElementById('btn-clear-items').addEventListener('click', () => {
       document.getElementById('dynamic-items').innerHTML = '';
       itemCount = 0;
       log('Dynamic items cleared');
-    }
+    });
+
+    document.getElementById('btn-action').addEventListener('click', () => {
+      log('Button clicked (not item navigation)');
+    });
 
     // ==============================
     // Destroy / re-init
     // ==============================
 
-    function destroyInstance() {
+    document.getElementById('btn-destroy').addEventListener('click', () => {
       instance.destroy();
       log('instance.destroy() called — event listeners removed, is-clickable classes removed');
-    }
+    });
 
-    function reinitInstance() {
+    document.getElementById('btn-reinit').addEventListener('click', () => {
       instance = anchorClick();
       log('anchorClick() re-initialised');
-    }
+    });
 
     // ==============================
     // Attribute changes
     // ==============================
 
-    function addParentAttr() {
-      const item = document.getElementById('attr-item');
-      item.setAttribute('data-anchor-target', '');
+    const attrItem = document.getElementById('attr-item');
+    const attrLink = document.getElementById('attr-link');
+
+    document.getElementById('btn-add-parent').addEventListener('click', () => {
+      attrItem.setAttribute('data-anchor-target', '');
       log('Added data-anchor-target to #attr-item');
-    }
+    });
 
-    function removeParentAttr() {
-      const item = document.getElementById('attr-item');
-      item.removeAttribute('data-anchor-target');
+    document.getElementById('btn-remove-parent').addEventListener('click', () => {
+      attrItem.removeAttribute('data-anchor-target');
       log('Removed data-anchor-target from #attr-item');
-    }
+    });
 
-    function addLinkAttr() {
-      const link = document.getElementById('attr-link');
-      link.setAttribute('data-anchor', '');
+    document.getElementById('btn-add-link').addEventListener('click', () => {
+      attrLink.setAttribute('data-anchor', '');
       log('Added data-anchor to #attr-link');
-    }
+    });
 
-    function removeLinkAttr() {
-      const link = document.getElementById('attr-link');
-      link.removeAttribute('data-anchor');
+    document.getElementById('btn-remove-link').addEventListener('click', () => {
+      attrLink.removeAttribute('data-anchor');
       log('Removed data-anchor from #attr-link');
-    }
+    });
 
     // ==============================
-    // Show is-clickable badges
+    // is-clickable badges
     // ==============================
 
-    function updateBadges() {
+    const updateBadges = () => {
       document.querySelectorAll('[data-anchor-target]').forEach((item) => {
         let badge = item.querySelector('.badge');
         if (!badge) {
@@ -322,13 +323,11 @@
       });
 
       document.querySelectorAll('.badge').forEach((badge) => {
-        if (!badge.closest('[data-anchor-target]')) {
-          badge.remove();
-        }
+        if (!badge.closest('[data-anchor-target]')) badge.remove();
       });
 
       requestAnimationFrame(updateBadges);
-    }
+    };
 
     updateBadges();
   </script>
