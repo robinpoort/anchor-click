@@ -145,7 +145,7 @@ git tag -a vX.Y.Z -m "vX.Y.Z"
 
 Show the user what is about to happen:
 
-- The commit and tag that will be pushed to `origin/main`
+- The commit and tag that will be pushed to `origin/master`
 - That `npm publish` will be run immediately after
 
 **Wait for explicit confirmation before continuing.**
@@ -155,7 +155,7 @@ Show the user what is about to happen:
 ## Step 12 — Push
 
 ```bash
-git push origin main --follow-tags
+git push origin master --follow-tags
 ```
 
 ---
