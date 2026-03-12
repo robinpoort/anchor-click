@@ -1,7 +1,7 @@
 {
   "name": "click-delegation",
   "version": "1.0.1",
-  "description": "Make entire item elements clickable by delegating clicks to an anchor link within",
+  "description": "Make entire elements clickable by delegating clicks to a clickable element within",
   "main": "dist/clickDelegation.js",
   "module": "dist/clickDelegation.esm.js",
   "types": "dist/clickDelegation.d.ts",

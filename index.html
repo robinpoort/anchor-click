@@ -24,10 +24,10 @@
          ============================== -->
     <section class="test-section">
       <h2>Basic item</h2>
-      <p>The entire item is clickable via <code>data-anchor-target</code> + <code>data-anchor</code>. Click anywhere on the item (not just the title link) to navigate.</p>
+      <p>The entire item is clickable via <code>data-delegate</code> + <code>data-delegate-to</code>. Click anywhere on the item (not just the title link) to navigate.</p>
       <div class="item-grid">
-        <div class="item" data-anchor-target>
-          <h3><a href="#basic-1" data-anchor>Item title</a></h3>
+        <div class="item" data-delegate>
+          <h3><a href="#basic-1" data-delegate-to>Item title</a></h3>
           <p>Click anywhere on this item. It will navigate to the link in the heading.</p>
           <div class="item-meta">
             <span>Category</span>
@@ -35,18 +35,44 @@
             <span>5 min read</span>
           </div>
         </div>
-        <div class="item" data-anchor-target>
-          <h3><a href="#basic-2" data-anchor>Another item</a></h3>
-          <p>This item also has a <code>data-anchor</code> and is fully clickable.</p>
+        <div class="item" data-delegate>
+          <h3><a href="#basic-2" data-delegate-to>Another item</a></h3>
+          <p>This item also has a <code>data-delegate-to</code> and is fully clickable.</p>
           <div class="item-meta">
             <span>Category</span>
             <span>·</span>
             <span>3 min read</span>
           </div>
         </div>
-        <div class="item item-no-link" data-anchor-target>
+        <div class="item item-no-link" data-delegate>
           <h3>Item without link</h3>
-          <p>This item has <code>data-anchor-target</code> but no <code>data-anchor</code>, so it does not become clickable.</p>
+          <p>This item has <code>data-delegate</code> but no <code>data-delegate-to</code>, so it does not become clickable.</p>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="section-heading">Non-anchor targets</h2>
+
+    <!-- ==============================
+         Non-anchor targets
+         ============================== -->
+    <section class="test-section">
+      <h2>Button as target</h2>
+      <p>The target element doesn't have to be an anchor. Here a <code>&lt;button&gt;</code> carries <code>data-delegate-to</code> — clicking anywhere on the item fires the button's click event.</p>
+      <div class="item-grid">
+        <div class="item" data-delegate>
+          <h3>Card with button target</h3>
+          <p>Clicking anywhere on this item fires the button below.</p>
+          <div class="item-meta">
+            <button id="btn-target" data-delegate-to>Open modal</button>
+          </div>
+        </div>
+        <div class="item" data-delegate>
+          <h3>Card with custom element target</h3>
+          <p>Any element with <code>data-delegate-to</code> works as a target — here a <code>&lt;span&gt;</code> with a click listener.</p>
+          <div class="item-meta">
+            <span id="span-target" data-delegate-to style="cursor: pointer; background: #e8f4fd; padding: 0.2rem 0.5rem; border-radius: 3px;">Custom target</span>
+          </div>
         </div>
       </div>
     </section>
@@ -58,10 +84,10 @@
          ============================== -->
     <section class="test-section">
       <h2>Named link</h2>
-      <p>When an item contains multiple links, use <code>data-anchor-target="name"</code> and <code>data-anchor="name"</code> to designate the primary link. The other links remain independently clickable.</p>
+      <p>When an item contains multiple links, use <code>data-delegate="name"</code> and <code>data-delegate-to="name"</code> to designate the primary link. The other links remain independently clickable.</p>
       <div class="item-grid">
-        <div class="item item-named" data-anchor-target="primary">
-          <h3><a href="#named-primary" data-anchor="primary">Primary link</a></h3>
+        <div class="item item-named" data-delegate="primary">
+          <h3><a href="#named-primary" data-delegate-to="primary">Primary link</a></h3>
           <p>Clicking the item background navigates to the primary link.</p>
           <div class="item-meta">
             <a href="#named-secondary">Secondary link</a>
@@ -69,11 +95,11 @@
             <a href="#named-tertiary">Tertiary link</a>
           </div>
         </div>
-        <div class="item item-named" data-anchor-target="secondary">
+        <div class="item item-named" data-delegate="secondary">
           <h3><a href="#named-other">Other link</a></h3>
           <p>Here the <em>second</em> link is the primary target.</p>
           <div class="item-meta">
-            <a href="#named-secondary-target" data-anchor="secondary">This is the primary target</a>
+            <a href="#named-secondary-target" data-delegate-to="secondary">This is the primary target</a>
           </div>
         </div>
       </div>
@@ -82,28 +108,28 @@
     <h2 class="section-heading">Ignored elements</h2>
 
     <!-- ==============================
-         3. data-anchor-ignore
+         3. data-delegate-ignore
          ============================== -->
     <section class="test-section">
       <h2>Ignored elements</h2>
-      <p>Buttons and elements with <code>data-anchor-ignore</code> do not trigger navigation. Buttons and anchor tags are always ignored automatically.</p>
+      <p>Buttons and elements with <code>data-delegate-ignore</code> do not trigger navigation. Buttons and anchor tags are always ignored automatically.</p>
       <div class="item-grid">
-        <div class="item item-ignore" data-anchor-target>
-          <h3><a href="#ignore-primary" data-anchor>Item title</a></h3>
+        <div class="item item-ignore" data-delegate>
+          <h3><a href="#ignore-primary" data-delegate-to>Item title</a></h3>
           <p>The button below does not trigger navigation.</p>
           <div class="item-meta">
             <button id="btn-action">Action button</button>
           </div>
         </div>
-        <div class="item item-ignore" data-anchor-target>
-          <h3><a href="#ignore-primary-2" data-anchor>Item title</a></h3>
-          <p>The element below has <code>data-anchor-ignore</code> and does not trigger navigation.</p>
+        <div class="item item-ignore" data-delegate>
+          <h3><a href="#ignore-primary-2" data-delegate-to>Item title</a></h3>
+          <p>The element below has <code>data-delegate-ignore</code> and does not trigger navigation.</p>
           <div class="item-meta">
-            <span data-anchor-ignore style="cursor: default; background: #fff3cd; padding: 0.2rem 0.5rem; border-radius: 3px;">Ignored area</span>
+            <span data-delegate-ignore style="cursor: default; background: #fff3cd; padding: 0.2rem 0.5rem; border-radius: 3px;">Ignored area</span>
           </div>
         </div>
-        <div class="item item-ignore" data-anchor-target>
-          <h3><a href="#ignore-primary-3" data-anchor>Item title</a></h3>
+        <div class="item item-ignore" data-delegate>
+          <h3><a href="#ignore-primary-3" data-delegate-to>Item title</a></h3>
           <p>A secondary anchor tag is always ignored automatically — it navigates independently.</p>
           <div class="item-meta">
             <a href="#ignore-secondary">Independent link</a>
@@ -132,7 +158,7 @@
          ============================== -->
     <section class="test-section">
       <h2>Attribute changes</h2>
-      <p>Adding or removing <code>data-anchor-target</code> or <code>data-anchor</code> on existing elements is detected automatically — no re-initialisation needed.</p>
+      <p>Adding or removing <code>data-delegate</code> or <code>data-delegate-to</code> on existing elements is detected automatically — no re-initialisation needed.</p>
       <div class="item-grid">
         <div class="item" id="attr-item">
           <h3>This item has no attributes yet</h3>
@@ -143,12 +169,12 @@
         </div>
       </div>
       <div class="button-row">
-        <button id="btn-add-parent">Add <code>data-anchor-target</code></button>
-        <button id="btn-remove-parent">Remove <code>data-anchor-target</code></button>
+        <button id="btn-add-parent">Add <code>data-delegate</code></button>
+        <button id="btn-remove-parent">Remove <code>data-delegate</code></button>
       </div>
       <div class="button-row">
-        <button id="btn-add-link">Add <code>data-anchor</code> to link</button>
-        <button id="btn-remove-link">Remove <code>data-anchor</code> from link</button>
+        <button id="btn-add-link">Add <code>data-delegate-to</code> to link</button>
+        <button id="btn-remove-link">Remove <code>data-delegate-to</code> from link</button>
       </div>
     </section>
 
@@ -171,7 +197,7 @@
          ============================== -->
     <section class="test-section">
       <h2>Destroy / re-init</h2>
-      <p><code>anchorClick()</code> returns an instance with a <code>destroy()</code> method that removes all event listeners, disconnects the MutationObserver and removes <code>is-clickable</code> from all items.</p>
+      <p><code>clickDelegation()</code> returns an instance with a <code>destroy()</code> method that removes all event listeners, disconnects the MutationObserver and removes <code>is-clickable</code> from all items.</p>
       <div class="button-row">
         <button id="btn-destroy">destroy()</button>
         <button id="btn-reinit">Re-init</button>
@@ -235,6 +261,18 @@
     });
 
     // ==============================
+    // Non-anchor targets
+    // ==============================
+
+    document.getElementById('btn-target').addEventListener('click', () => {
+      log('Button target clicked — modal would open here');
+    });
+
+    document.getElementById('span-target').addEventListener('click', () => {
+      log('Custom element target clicked');
+    });
+
+    // ==============================
     // Dynamic items
     // ==============================
 
@@ -245,9 +283,9 @@
       const container = document.getElementById('dynamic-items');
       const item = document.createElement('div');
       item.className = 'item';
-      item.setAttribute('data-anchor-target', '');
+      item.setAttribute('data-delegate', '');
       item.innerHTML = `
-        <h3><a href="#dynamic-${itemCount}" data-anchor>Dynamic item ${itemCount}</a></h3>
+        <h3><a href="#dynamic-${itemCount}" data-delegate-to>Dynamic item ${itemCount}</a></h3>
         <p>Added after page load. Should be immediately clickable.</p>
       `;
       container.appendChild(item);
@@ -275,7 +313,7 @@
 
     document.getElementById('btn-reinit').addEventListener('click', () => {
       instance = clickDelegation();
-      log('anchorClick() re-initialised');
+      log('clickDelegation() re-initialised');
     });
 
     // ==============================
@@ -286,23 +324,23 @@
     const attrLink = document.getElementById('attr-link');
 
     document.getElementById('btn-add-parent').addEventListener('click', () => {
-      attrItem.setAttribute('data-anchor-target', '');
-      log('Added data-anchor-target to #attr-item');
+      attrItem.setAttribute('data-delegate', '');
+      log('Added data-delegate to #attr-item');
     });
 
     document.getElementById('btn-remove-parent').addEventListener('click', () => {
-      attrItem.removeAttribute('data-anchor-target');
-      log('Removed data-anchor-target from #attr-item');
+      attrItem.removeAttribute('data-delegate');
+      log('Removed data-delegate from #attr-item');
     });
 
     document.getElementById('btn-add-link').addEventListener('click', () => {
-      attrLink.setAttribute('data-anchor', '');
-      log('Added data-anchor to #attr-link');
+      attrLink.setAttribute('data-delegate-to', '');
+      log('Added data-delegate-to to #attr-link');
     });
 
     document.getElementById('btn-remove-link').addEventListener('click', () => {
-      attrLink.removeAttribute('data-anchor');
-      log('Removed data-anchor from #attr-link');
+      attrLink.removeAttribute('data-delegate-to');
+      log('Removed data-delegate-to from #attr-link');
     });
 
     // ==============================
@@ -310,7 +348,7 @@
     // ==============================
 
     const updateBadges = () => {
-      document.querySelectorAll('[data-anchor-target]').forEach((item) => {
+      document.querySelectorAll('[data-delegate]').forEach((item) => {
         let badge = item.querySelector('.badge');
         if (!badge) {
           badge = document.createElement('span');
@@ -323,7 +361,7 @@
       });
 
       document.querySelectorAll('.badge').forEach((badge) => {
-        if (!badge.closest('[data-anchor-target]')) badge.remove();
+        if (!badge.closest('[data-delegate]')) badge.remove();
       });
 
       requestAnimationFrame(updateBadges);

@@ -16,16 +16,16 @@
 
   return function clickDelegation(options) {
     const config = Object.assign({
-      parent: 'data-anchor-target',
-      link: 'data-anchor',
-      ignore: 'data-anchor-ignore',
+      parent: 'data-delegate',
+      target: 'data-delegate-to',
+      ignore: 'data-delegate-ignore',
       clickableClass: 'is-clickable',
       downUpTime: 200,
       onClick: null
     }, options);
 
     const parentAttr = config.parent;
-    const linkAttr = config.link;
+    const targetAttr = config.target;
     const ignoreAttr = config.ignore;
     const clickableClass = config.clickableClass;
     const downUpTime = config.downUpTime;
@@ -39,13 +39,13 @@
     let destroyed = false;
 
     const handleItem = (item) => {
-      let link;
+      let target;
       try {
-        link = item.querySelector(`[${linkAttr}]`);
+        target = item.querySelector(`[${targetAttr}]`);
       } catch (e) {
         return;
       }
-      if (link) {
+      if (target) {
         item.classList.add(clickableClass);
       } else {
         item.classList.remove(clickableClass);
@@ -72,15 +72,15 @@
               }
             });
           } else if (mutation.type === 'attributes') {
-            const target = mutation.target;
+            const mutationTarget = mutation.target;
             if (mutation.attributeName === parentAttr) {
-              if (target.hasAttribute(parentAttr)) {
-                handleItem(target);
+              if (mutationTarget.hasAttribute(parentAttr)) {
+                handleItem(mutationTarget);
               } else {
-                target.classList.remove(clickableClass);
+                mutationTarget.classList.remove(clickableClass);
               }
-            } else if (mutation.attributeName === linkAttr) {
-              const parent = target.closest(`[${parentAttr}]`);
+            } else if (mutation.attributeName === targetAttr) {
+              const parent = mutationTarget.closest(`[${parentAttr}]`);
               if (parent) {
                 handleItem(parent);
               }
@@ -93,7 +93,7 @@
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: [parentAttr, linkAttr]
+        attributeFilter: [parentAttr, targetAttr]
       });
 
       onPointerDown = (event) => {
@@ -122,8 +122,8 @@
           return;
         }
 
-        // If clicking directly on or inside the target link, let the browser handle it
-        if (event.target.closest(`[${linkAttr}]`)) {
+        // If clicking directly on or inside the target element, let the browser handle it
+        if (event.target.closest(`[${targetAttr}]`)) {
           return;
         }
 
@@ -136,33 +136,33 @@
 
         let ignore;
         try {
-          ignore = event.target.closest(`[${ignoreAttr}], [href]:not([${linkAttr}])`);
+          ignore = event.target.closest(`[${ignoreAttr}], [href]:not([${targetAttr}])`);
         } catch (e) {
           return;
         }
 
         const itemValue = item.getAttribute(parentAttr);
-        let link;
+        let target;
         try {
-          link = itemValue && itemValue.length > 0
-            ? item.querySelector(`[${linkAttr}="${itemValue}"]`)
-            : item.querySelector(`[${linkAttr}]`);
+          target = itemValue && itemValue.length > 0
+            ? item.querySelector(`[${targetAttr}="${itemValue}"]`)
+            : item.querySelector(`[${targetAttr}]`);
         } catch (e) {
           return;
         }
 
-        if (!link) {
+        if (!target) {
           return;
         }
 
         if (up - down < downUpTime && !ignore) {
           if (config.onClick) {
-            config.onClick(item, link);
+            config.onClick(item, target);
           }
-          if (event.ctrlKey || event.metaKey || event.button === 1) {
-            window.open(link.href, '_blank', 'noopener,noreferrer');
+          if ((event.ctrlKey || event.metaKey || event.button === 1) && target.href) {
+            window.open(target.href, '_blank', 'noopener,noreferrer');
           } else {
-            link.click();
+            target.click();
           }
           down = undefined;
         }

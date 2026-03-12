@@ -2,7 +2,7 @@
 
 ## Project overview
 
-click-delegation is a zero-dependency browser library that makes entire elements clickable by delegating pointer events to an anchor link within. It supports named link targeting, ignored elements, dynamic DOM changes via MutationObserver, and a destroy/re-init lifecycle.
+click-delegation is a zero-dependency browser library that makes entire elements clickable by delegating pointer events to a clickable element within (anchor, button, or any other element). It supports named target targeting, ignored elements, dynamic DOM changes via MutationObserver, and a destroy/re-init lifecycle.
 
 ## Project structure
 
@@ -89,20 +89,20 @@ Returns an object with a single method: `destroy()`.
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `parent` | `string` | `"data-anchor-target"` | Attribute on the clickable container element |
-| `link` | `string` | `"data-anchor"` | Attribute on the target anchor element |
-| `ignore` | `string` | `"data-anchor-ignore"` | Attribute to exclude child elements from triggering navigation |
-| `clickableClass` | `string` | `"is-clickable"` | Class added to containers that have a matching link |
+| `parent` | `string` | `"data-delegate"` | Attribute on the clickable container element |
+| `target` | `string` | `"data-delegate-to"` | Attribute on the target element (anchor, button, or any clickable element) |
+| `ignore` | `string` | `"data-delegate-ignore"` | Attribute to exclude child elements from triggering a click |
+| `clickableClass` | `string` | `"is-clickable"` | Class added to containers that have a matching target |
 | `downUpTime` | `number` | `200` | Max ms between pointerdown and pointerup to count as a click |
-| `onClick` | `function\|null` | `null` | Callback fired before navigation: `(item, link) => void` |
+| `onClick` | `function\|null` | `null` | Callback fired before the target click: `(item, target) => void` |
 
-### Named links
+### Named targets
 
-Set matching values on both attributes to designate one link as the primary target when a container has multiple links:
+Set matching values on both attributes to designate one element as the primary target when a container has multiple clickable elements:
 
 ```html
-<div data-anchor-target="primary">
-  <a href="/page" data-anchor="primary">Primary</a>
+<div data-delegate="primary">
+  <a href="/page" data-delegate-to="primary">Primary</a>
   <a href="/other">Other (independent)</a>
 </div>
 ```
@@ -111,8 +111,8 @@ Set matching values on both attributes to designate one link as the primary targ
 
 These are never treated as item clicks regardless of `ignore`:
 - Elements matching `button, input, select, textarea`
-- Any `[href]` element that does not carry the `link` attribute (independent links)
-- Direct clicks on or inside the `link` element itself (browser handles natively)
+- Any `[href]` element that does not carry the `target` attribute (independent anchor links)
+- Direct clicks on or inside the `target` element itself (browser handles natively)
 
 ## When editing
 

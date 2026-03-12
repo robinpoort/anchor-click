@@ -14,23 +14,23 @@ describe('clickDelegation — default attributes', () => {
 
   it('adds clickable class to items with a link', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
       </div>
     `;
     instance = clickDelegation();
-    const item = document.querySelector('[data-anchor-target]');
+    const item = document.querySelector('[data-delegate]');
     expect(item.classList.contains('is-clickable')).toBe(true);
   });
 
   it('does not add clickable class to items without a link', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
+      <div data-delegate>
         <p>No link here</p>
       </div>
     `;
     instance = clickDelegation();
-    const item = document.querySelector('[data-anchor-target]');
+    const item = document.querySelector('[data-delegate]');
     expect(item.classList.contains('is-clickable')).toBe(false);
   });
 
@@ -41,12 +41,12 @@ describe('clickDelegation — default attributes', () => {
 
   it('removes clickable class on destroy', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
       </div>
     `;
     instance = clickDelegation();
-    const item = document.querySelector('[data-anchor-target]');
+    const item = document.querySelector('[data-delegate]');
     expect(item.classList.contains('is-clickable')).toBe(true);
     instance.destroy();
     expect(item.classList.contains('is-clickable')).toBe(false);
@@ -63,25 +63,25 @@ describe('clickDelegation — custom attributes', () => {
 
   it('uses custom clickableClass option', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
       </div>
     `;
     instance = clickDelegation({ clickableClass: 'my-custom-class' });
-    const item = document.querySelector('[data-anchor-target]');
+    const item = document.querySelector('[data-delegate]');
     expect(item.classList.contains('my-custom-class')).toBe(true);
   });
 
   it('calls onClick callback on navigation', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
       </div>
     `;
     const onClick = vi.fn();
     instance = clickDelegation({ onClick });
-    const item = document.querySelector('[data-anchor-target]');
-    const link = document.querySelector('[data-anchor]');
+    const item = document.querySelector('[data-delegate]');
+    const link = document.querySelector('[data-delegate-to]');
 
     // Simulate a fast pointerdown + pointerup
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
@@ -122,15 +122,15 @@ describe('clickDelegation — named links', () => {
 
   it('navigates to the named link when parent has a matching value', () => {
     document.body.innerHTML = `
-      <div data-anchor-target="primary">
-        <a href="/primary" data-anchor="primary">Primary</a>
+      <div data-delegate="primary">
+        <a href="/primary" data-delegate-to="primary">Primary</a>
         <a href="/secondary">Secondary</a>
       </div>
     `;
     const onClick = vi.fn();
     instance = clickDelegation({ onClick });
-    const item = document.querySelector('[data-anchor-target]');
-    const link = document.querySelector('[data-anchor="primary"]');
+    const item = document.querySelector('[data-delegate]');
+    const link = document.querySelector('[data-delegate-to="primary"]');
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
@@ -140,8 +140,8 @@ describe('clickDelegation — named links', () => {
 
   it('does not navigate when clicking on a secondary link inside a named-link item', () => {
     document.body.innerHTML = `
-      <div data-anchor-target="primary">
-        <a href="/primary" data-anchor="primary">Primary</a>
+      <div data-delegate="primary">
+        <a href="/primary" data-delegate-to="primary">Primary</a>
         <a href="/secondary" id="secondary-link">Secondary</a>
       </div>
     `;
@@ -167,11 +167,11 @@ describe('clickDelegation — ignored elements', () => {
     if (instance) instance.destroy();
   });
 
-  it('does not navigate when clicking on a data-anchor-ignore element', () => {
+  it('does not navigate when clicking on a data-delegate-ignore element', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
-        <span id="ignored" data-anchor-ignore>Ignored</span>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
+        <span id="ignored" data-delegate-ignore>Ignored</span>
       </div>
     `;
     const onClick = vi.fn();
@@ -185,8 +185,8 @@ describe('clickDelegation — ignored elements', () => {
 
   it('does not navigate when clicking on an independent anchor tag', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
         <a href="/other" id="other-link">Other</a>
       </div>
     `;
@@ -201,8 +201,8 @@ describe('clickDelegation — ignored elements', () => {
 
   it('does not navigate when clicking inside a button', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
         <button id="btn">Action</button>
       </div>
     `;
@@ -232,8 +232,8 @@ describe('clickDelegation — MutationObserver', () => {
     instance = clickDelegation();
 
     const item = document.createElement('div');
-    item.setAttribute('data-anchor-target', '');
-    item.innerHTML = '<a href="/test" data-anchor>Title</a>';
+    item.setAttribute('data-delegate', '');
+    item.innerHTML = '<a href="/test" data-delegate-to>Title</a>';
     document.body.appendChild(item);
 
     await new Promise(r => setTimeout(r, 0));
@@ -241,33 +241,33 @@ describe('clickDelegation — MutationObserver', () => {
     expect(item.classList.contains('is-clickable')).toBe(true);
   });
 
-  it('removes clickable class when data-anchor-target is removed', async () => {
+  it('removes clickable class when data-delegate is removed', async () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
       </div>
     `;
     instance = clickDelegation();
-    const item = document.querySelector('[data-anchor-target]');
+    const item = document.querySelector('[data-delegate]');
     expect(item.classList.contains('is-clickable')).toBe(true);
 
-    item.removeAttribute('data-anchor-target');
+    item.removeAttribute('data-delegate');
     await new Promise(r => setTimeout(r, 0));
 
     expect(item.classList.contains('is-clickable')).toBe(false);
   });
 
-  it('adds clickable class when data-anchor is added to a link', async () => {
+  it('adds clickable class when data-delegate-to is added to a link', async () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
+      <div data-delegate>
         <a href="/test" id="link">Title</a>
       </div>
     `;
     instance = clickDelegation();
-    const item = document.querySelector('[data-anchor-target]');
+    const item = document.querySelector('[data-delegate]');
     expect(item.classList.contains('is-clickable')).toBe(false);
 
-    document.getElementById('link').setAttribute('data-anchor', '');
+    document.getElementById('link').setAttribute('data-delegate-to', '');
     await new Promise(r => setTimeout(r, 0));
 
     expect(item.classList.contains('is-clickable')).toBe(true);
@@ -293,13 +293,13 @@ describe('clickDelegation — timing (downUpTime)', () => {
 
   it('navigates when pointer is released within downUpTime', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
       </div>
     `;
     const onClick = vi.fn();
     instance = clickDelegation({ onClick, downUpTime: 200 });
-    const item = document.querySelector('[data-anchor-target]');
+    const item = document.querySelector('[data-delegate]');
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     vi.advanceTimersByTime(100);
@@ -310,13 +310,13 @@ describe('clickDelegation — timing (downUpTime)', () => {
 
   it('does not navigate when pointer is held longer than downUpTime', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
       </div>
     `;
     const onClick = vi.fn();
     instance = clickDelegation({ onClick, downUpTime: 200 });
-    const item = document.querySelector('[data-anchor-target]');
+    const item = document.querySelector('[data-delegate]');
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     vi.advanceTimersByTime(250);
@@ -327,13 +327,13 @@ describe('clickDelegation — timing (downUpTime)', () => {
 
   it('does not navigate after pointercancel resets the press', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
       </div>
     `;
     const onClick = vi.fn();
     instance = clickDelegation({ onClick, downUpTime: 200 });
-    const item = document.querySelector('[data-anchor-target]');
+    const item = document.querySelector('[data-delegate]');
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     window.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, isPrimary: true }));
@@ -363,12 +363,12 @@ describe('clickDelegation — modifier keys', () => {
 
   it('opens in new tab on ctrl+click', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
       </div>
     `;
     instance = clickDelegation();
-    const item = document.querySelector('[data-anchor-target]');
+    const item = document.querySelector('[data-delegate]');
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 0 }));
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true, button: 0, ctrlKey: true }));
@@ -378,12 +378,12 @@ describe('clickDelegation — modifier keys', () => {
 
   it('opens in new tab on meta+click', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
       </div>
     `;
     instance = clickDelegation();
-    const item = document.querySelector('[data-anchor-target]');
+    const item = document.querySelector('[data-delegate]');
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 0 }));
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true, button: 0, metaKey: true }));
@@ -393,12 +393,12 @@ describe('clickDelegation — modifier keys', () => {
 
   it('opens in new tab on middle-click', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
       </div>
     `;
     instance = clickDelegation();
-    const item = document.querySelector('[data-anchor-target]');
+    const item = document.querySelector('[data-delegate]');
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 1 }));
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true, button: 1 }));
@@ -421,19 +421,69 @@ describe('clickDelegation — destroy', () => {
 
   it('stops navigating after destroy is called', () => {
     document.body.innerHTML = `
-      <div data-anchor-target>
-        <a href="/test" data-anchor>Title</a>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
       </div>
     `;
     const onClick = vi.fn();
     instance = clickDelegation({ onClick });
     instance.destroy();
 
-    const item = document.querySelector('[data-anchor-target]');
+    const item = document.querySelector('[data-delegate]');
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
 
     expect(onClick).not.toHaveBeenCalled();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Non-anchor targets (buttons)
+// ---------------------------------------------------------------------------
+
+describe('clickDelegation — non-anchor targets', () => {
+  let instance;
+
+  beforeEach(() => {
+    document.body.innerHTML = '';
+    if (instance) instance.destroy();
+  });
+
+  it('calls click() on a button target', () => {
+    document.body.innerHTML = `
+      <div data-delegate>
+        <button data-delegate-to id="btn">Action</button>
+      </div>
+    `;
+    instance = clickDelegation();
+    const item = document.querySelector('[data-delegate]');
+    const btn = document.getElementById('btn');
+    const clickSpy = vi.spyOn(btn, 'click');
+
+    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
+    item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
+
+    expect(clickSpy).toHaveBeenCalled();
+  });
+
+  it('calls click() instead of window.open on ctrl+click when target has no href', () => {
+    document.body.innerHTML = `
+      <div data-delegate>
+        <button data-delegate-to id="btn">Action</button>
+      </div>
+    `;
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
+    instance = clickDelegation();
+    const item = document.querySelector('[data-delegate]');
+    const btn = document.getElementById('btn');
+    const clickSpy = vi.spyOn(btn, 'click');
+
+    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 0 }));
+    item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true, button: 0, ctrlKey: true }));
+
+    expect(openSpy).not.toHaveBeenCalled();
+    expect(clickSpy).toHaveBeenCalled();
+    openSpy.mockRestore();
   });
 });
 
