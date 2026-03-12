@@ -84,7 +84,7 @@ describe('clickDelegation — custom attributes', () => {
     const link = document.querySelector('[data-delegate-to]');
 
     // Simulate a fast pointerdown + pointerup
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
+    item.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
 
     expect(onClick).toHaveBeenCalledWith(item, link);
@@ -132,10 +132,22 @@ describe('clickDelegation — named links', () => {
     const item = document.querySelector('[data-delegate]');
     const link = document.querySelector('[data-delegate-to="primary"]');
 
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
+    item.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
 
     expect(onClick).toHaveBeenCalledWith(item, link);
+  });
+
+  it('does not add clickable class when no named target matches', () => {
+    document.body.innerHTML = `
+      <div data-delegate="primary">
+        <a href="/secondary" data-delegate-to="secondary">Secondary</a>
+      </div>
+    `;
+    instance = clickDelegation();
+    const item = document.querySelector('[data-delegate]');
+
+    expect(item.classList.contains('is-clickable')).toBe(false);
   });
 
   it('does not navigate when clicking on a secondary link inside a named-link item', () => {
@@ -148,7 +160,7 @@ describe('clickDelegation — named links', () => {
     const onClick = vi.fn();
     instance = clickDelegation({ onClick });
 
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
+    document.querySelector('[data-delegate]').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     document.getElementById('secondary-link').dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
 
     expect(onClick).not.toHaveBeenCalled();
@@ -177,7 +189,7 @@ describe('clickDelegation — ignored elements', () => {
     const onClick = vi.fn();
     instance = clickDelegation({ onClick });
 
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
+    document.querySelector('[data-delegate]').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     document.getElementById('ignored').dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
 
     expect(onClick).not.toHaveBeenCalled();
@@ -193,7 +205,7 @@ describe('clickDelegation — ignored elements', () => {
     const onClick = vi.fn();
     instance = clickDelegation({ onClick });
 
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
+    document.querySelector('[data-delegate]').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     document.getElementById('other-link').dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
 
     expect(onClick).not.toHaveBeenCalled();
@@ -209,7 +221,7 @@ describe('clickDelegation — ignored elements', () => {
     const onClick = vi.fn();
     instance = clickDelegation({ onClick });
 
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
+    document.querySelector('[data-delegate]').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     document.getElementById('btn').dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
 
     expect(onClick).not.toHaveBeenCalled();
@@ -301,7 +313,7 @@ describe('clickDelegation — timing (downUpTime)', () => {
     instance = clickDelegation({ onClick, downUpTime: 200 });
     const item = document.querySelector('[data-delegate]');
 
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
+    item.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     vi.advanceTimersByTime(100);
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
 
@@ -318,7 +330,7 @@ describe('clickDelegation — timing (downUpTime)', () => {
     instance = clickDelegation({ onClick, downUpTime: 200 });
     const item = document.querySelector('[data-delegate]');
 
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
+    item.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     vi.advanceTimersByTime(250);
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
 
@@ -335,9 +347,63 @@ describe('clickDelegation — timing (downUpTime)', () => {
     instance = clickDelegation({ onClick, downUpTime: 200 });
     const item = document.querySelector('[data-delegate]');
 
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
+    item.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     window.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, isPrimary: true }));
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
+
+    expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('does not navigate when pointerdown started outside the item', () => {
+    document.body.innerHTML = `
+      <div id="outside">Outside</div>
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
+      </div>
+    `;
+    const onClick = vi.fn();
+    instance = clickDelegation({ onClick, downUpTime: 200 });
+    const item = document.querySelector('[data-delegate]');
+    const outside = document.getElementById('outside');
+
+    outside.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, pointerId: 1 }));
+    item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true, pointerId: 1 }));
+
+    expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('does not navigate when pointerdown started on a different item', () => {
+    document.body.innerHTML = `
+      <div data-delegate id="item-a">
+        <a href="/a" data-delegate-to>A</a>
+      </div>
+      <div data-delegate id="item-b">
+        <a href="/b" data-delegate-to>B</a>
+      </div>
+    `;
+    const onClick = vi.fn();
+    instance = clickDelegation({ onClick, downUpTime: 200 });
+    const itemA = document.getElementById('item-a');
+    const itemB = document.getElementById('item-b');
+
+    itemA.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, pointerId: 2 }));
+    itemB.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true, pointerId: 2 }));
+
+    expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('does not navigate when pointerup comes from a different pointer', () => {
+    document.body.innerHTML = `
+      <div data-delegate>
+        <a href="/test" data-delegate-to>Title</a>
+      </div>
+    `;
+    const onClick = vi.fn();
+    instance = clickDelegation({ onClick, downUpTime: 200 });
+    const item = document.querySelector('[data-delegate]');
+
+    item.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, pointerId: 3 }));
+    item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true, pointerId: 4 }));
 
     expect(onClick).not.toHaveBeenCalled();
   });
@@ -370,7 +436,7 @@ describe('clickDelegation — modifier keys', () => {
     instance = clickDelegation();
     const item = document.querySelector('[data-delegate]');
 
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 0 }));
+    item.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 0 }));
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true, button: 0, ctrlKey: true }));
 
     expect(openSpy).toHaveBeenCalledWith(expect.any(String), '_blank', 'noopener,noreferrer');
@@ -385,7 +451,7 @@ describe('clickDelegation — modifier keys', () => {
     instance = clickDelegation();
     const item = document.querySelector('[data-delegate]');
 
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 0 }));
+    item.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 0 }));
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true, button: 0, metaKey: true }));
 
     expect(openSpy).toHaveBeenCalledWith(expect.any(String), '_blank', 'noopener,noreferrer');
@@ -400,7 +466,7 @@ describe('clickDelegation — modifier keys', () => {
     instance = clickDelegation();
     const item = document.querySelector('[data-delegate]');
 
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 1 }));
+    item.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 1 }));
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true, button: 1 }));
 
     expect(openSpy).toHaveBeenCalledWith(expect.any(String), '_blank', 'noopener,noreferrer');
@@ -430,7 +496,7 @@ describe('clickDelegation — destroy', () => {
     instance.destroy();
 
     const item = document.querySelector('[data-delegate]');
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
+    item.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
 
     expect(onClick).not.toHaveBeenCalled();
@@ -460,7 +526,7 @@ describe('clickDelegation — non-anchor targets', () => {
     const btn = document.getElementById('btn');
     const clickSpy = vi.spyOn(btn, 'click');
 
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
+    item.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
 
     expect(clickSpy).toHaveBeenCalled();
@@ -478,7 +544,7 @@ describe('clickDelegation — non-anchor targets', () => {
     const btn = document.getElementById('btn');
     const clickSpy = vi.spyOn(btn, 'click');
 
-    window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 0 }));
+    item.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 0 }));
     item.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true, button: 0, ctrlKey: true }));
 
     expect(openSpy).not.toHaveBeenCalled();

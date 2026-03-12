@@ -29,7 +29,7 @@
     const ignoreAttr = config.ignore;
     const clickableClass = config.clickableClass;
     const downUpTime = config.downUpTime;
-    let down;
+    let activePress;
     let observer;
     let onPointerDown;
     let onPointerUp;
@@ -38,10 +38,54 @@
     let initialized = false;
     let destroyed = false;
 
+    const resolveTarget = (item) => {
+      const itemValue = item.getAttribute(parentAttr);
+
+      if (!(itemValue && itemValue.length > 0)) {
+        return item.querySelector(`[${targetAttr}]`);
+      }
+
+      return Array.from(item.querySelectorAll(`[${targetAttr}]`)).find((candidate) => {
+        return candidate.getAttribute(targetAttr) === itemValue;
+      }) || null;
+    };
+
+    const shouldIgnoreElement = (element) => {
+      if (!element || !element.closest) {
+        return false;
+      }
+
+      if (element.closest('button, input, select, textarea')) {
+        return true;
+      }
+
+      if (element.closest(`[${targetAttr}]`)) {
+        return true;
+      }
+
+      try {
+        return !!element.closest(`[${ignoreAttr}], [href]:not([${targetAttr}])`);
+      } catch (e) {
+        return true;
+      }
+    };
+
+    const getClosest = (element, selector) => {
+      if (!element || !element.closest) {
+        return null;
+      }
+
+      try {
+        return element.closest(selector);
+      } catch (e) {
+        return null;
+      }
+    };
+
     const handleItem = (item) => {
       let target;
       try {
-        target = item.querySelector(`[${targetAttr}]`);
+        target = resolveTarget(item);
       } catch (e) {
         return;
       }
@@ -103,7 +147,18 @@
         if (event.button !== 0 && event.button !== 1) {
           return;
         }
-        down = Date.now();
+
+        const item = getClosest(event.target, `[${parentAttr}]`);
+        if (!item || shouldIgnoreElement(event.target)) {
+          activePress = null;
+          return;
+        }
+
+        activePress = {
+          time: Date.now(),
+          pointerId: event.pointerId,
+          item
+        };
       };
 
       onPointerUp = (event) => {
@@ -117,36 +172,20 @@
           return;
         }
 
-        // Ignore clicks on or inside interactive elements
-        if (event.target.closest('button, input, select, textarea')) {
-          return;
-        }
-
-        // If clicking directly on or inside the target element, let the browser handle it
-        if (event.target.closest(`[${targetAttr}]`)) {
+        if (shouldIgnoreElement(event.target)) {
           return;
         }
 
         const up = Date.now();
-        const item = event.target.closest(`[${parentAttr}]`);
+        const item = getClosest(event.target, `[${parentAttr}]`);
 
         if (!item) {
           return;
         }
 
-        let ignore;
-        try {
-          ignore = event.target.closest(`[${ignoreAttr}], [href]:not([${targetAttr}])`);
-        } catch (e) {
-          return;
-        }
-
-        const itemValue = item.getAttribute(parentAttr);
         let target;
         try {
-          target = itemValue && itemValue.length > 0
-            ? item.querySelector(`[${targetAttr}="${itemValue}"]`)
-            : item.querySelector(`[${targetAttr}]`);
+          target = resolveTarget(item);
         } catch (e) {
           return;
         }
@@ -155,7 +194,12 @@
           return;
         }
 
-        if (up - down < downUpTime && !ignore) {
+        if (
+          activePress &&
+          activePress.pointerId === event.pointerId &&
+          activePress.item === item &&
+          up - activePress.time < downUpTime
+        ) {
           if (config.onClick) {
             config.onClick(item, target);
           }
@@ -164,12 +208,12 @@
           } else {
             target.click();
           }
-          down = undefined;
+          activePress = null;
         }
       };
 
       onPointerCancel = () => {
-        down = undefined;
+        activePress = null;
       };
 
       window.addEventListener('pointerdown', onPointerDown);
@@ -210,6 +254,7 @@
           window.removeEventListener('pointercancel', onPointerCancel);
           onPointerCancel = null;
         }
+        activePress = null;
         document.querySelectorAll(`[${parentAttr}]`).forEach((item) => {
           item.classList.remove(clickableClass);
         });
