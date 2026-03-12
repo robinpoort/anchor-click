@@ -2,9 +2,9 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import vm from 'node:vm';
-import anchorClick from '../src/anchorClick.js';
+import clickDelegation from '../src/clickDelegation.js';
 
-describe('anchorClick — default attributes', () => {
+describe('clickDelegation — default attributes', () => {
   let instance;
 
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe('anchorClick — default attributes', () => {
         <a href="/test" data-anchor>Title</a>
       </div>
     `;
-    instance = anchorClick();
+    instance = clickDelegation();
     const item = document.querySelector('[data-anchor-target]');
     expect(item.classList.contains('is-clickable')).toBe(true);
   });
@@ -29,13 +29,13 @@ describe('anchorClick — default attributes', () => {
         <p>No link here</p>
       </div>
     `;
-    instance = anchorClick();
+    instance = clickDelegation();
     const item = document.querySelector('[data-anchor-target]');
     expect(item.classList.contains('is-clickable')).toBe(false);
   });
 
   it('returns a destroy method', () => {
-    instance = anchorClick();
+    instance = clickDelegation();
     expect(typeof instance.destroy).toBe('function');
   });
 
@@ -45,7 +45,7 @@ describe('anchorClick — default attributes', () => {
         <a href="/test" data-anchor>Title</a>
       </div>
     `;
-    instance = anchorClick();
+    instance = clickDelegation();
     const item = document.querySelector('[data-anchor-target]');
     expect(item.classList.contains('is-clickable')).toBe(true);
     instance.destroy();
@@ -53,7 +53,7 @@ describe('anchorClick — default attributes', () => {
   });
 });
 
-describe('anchorClick — custom attributes', () => {
+describe('clickDelegation — custom attributes', () => {
   let instance;
 
   beforeEach(() => {
@@ -67,7 +67,7 @@ describe('anchorClick — custom attributes', () => {
         <a href="/test" data-anchor>Title</a>
       </div>
     `;
-    instance = anchorClick({ clickableClass: 'my-custom-class' });
+    instance = clickDelegation({ clickableClass: 'my-custom-class' });
     const item = document.querySelector('[data-anchor-target]');
     expect(item.classList.contains('my-custom-class')).toBe(true);
   });
@@ -79,7 +79,7 @@ describe('anchorClick — custom attributes', () => {
       </div>
     `;
     const onClick = vi.fn();
-    instance = anchorClick({ onClick });
+    instance = clickDelegation({ onClick });
     const item = document.querySelector('[data-anchor-target]');
     const link = document.querySelector('[data-anchor]');
 
@@ -95,7 +95,7 @@ describe('anchorClick — custom attributes', () => {
     const addSpy = vi.spyOn(document, 'addEventListener');
     const removeSpy = vi.spyOn(document, 'removeEventListener');
 
-    instance = anchorClick();
+    instance = clickDelegation();
     instance.destroy();
 
     const domReadyHandler = addSpy.mock.calls.find((call) => call[0] === 'DOMContentLoaded')?.[1];
@@ -112,7 +112,7 @@ describe('anchorClick — custom attributes', () => {
 // Named links
 // ---------------------------------------------------------------------------
 
-describe('anchorClick — named links', () => {
+describe('clickDelegation — named links', () => {
   let instance;
 
   beforeEach(() => {
@@ -128,7 +128,7 @@ describe('anchorClick — named links', () => {
       </div>
     `;
     const onClick = vi.fn();
-    instance = anchorClick({ onClick });
+    instance = clickDelegation({ onClick });
     const item = document.querySelector('[data-anchor-target]');
     const link = document.querySelector('[data-anchor="primary"]');
 
@@ -146,7 +146,7 @@ describe('anchorClick — named links', () => {
       </div>
     `;
     const onClick = vi.fn();
-    instance = anchorClick({ onClick });
+    instance = clickDelegation({ onClick });
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     document.getElementById('secondary-link').dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
@@ -159,7 +159,7 @@ describe('anchorClick — named links', () => {
 // Ignored elements
 // ---------------------------------------------------------------------------
 
-describe('anchorClick — ignored elements', () => {
+describe('clickDelegation — ignored elements', () => {
   let instance;
 
   beforeEach(() => {
@@ -175,7 +175,7 @@ describe('anchorClick — ignored elements', () => {
       </div>
     `;
     const onClick = vi.fn();
-    instance = anchorClick({ onClick });
+    instance = clickDelegation({ onClick });
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     document.getElementById('ignored').dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
@@ -191,7 +191,7 @@ describe('anchorClick — ignored elements', () => {
       </div>
     `;
     const onClick = vi.fn();
-    instance = anchorClick({ onClick });
+    instance = clickDelegation({ onClick });
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     document.getElementById('other-link').dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
@@ -207,7 +207,7 @@ describe('anchorClick — ignored elements', () => {
       </div>
     `;
     const onClick = vi.fn();
-    instance = anchorClick({ onClick });
+    instance = clickDelegation({ onClick });
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
     document.getElementById('btn').dispatchEvent(new PointerEvent('pointerup', { bubbles: true, isPrimary: true }));
@@ -220,7 +220,7 @@ describe('anchorClick — ignored elements', () => {
 // MutationObserver
 // ---------------------------------------------------------------------------
 
-describe('anchorClick — MutationObserver', () => {
+describe('clickDelegation — MutationObserver', () => {
   let instance;
 
   beforeEach(() => {
@@ -229,7 +229,7 @@ describe('anchorClick — MutationObserver', () => {
   });
 
   it('adds clickable class to dynamically added items', async () => {
-    instance = anchorClick();
+    instance = clickDelegation();
 
     const item = document.createElement('div');
     item.setAttribute('data-anchor-target', '');
@@ -247,7 +247,7 @@ describe('anchorClick — MutationObserver', () => {
         <a href="/test" data-anchor>Title</a>
       </div>
     `;
-    instance = anchorClick();
+    instance = clickDelegation();
     const item = document.querySelector('[data-anchor-target]');
     expect(item.classList.contains('is-clickable')).toBe(true);
 
@@ -263,7 +263,7 @@ describe('anchorClick — MutationObserver', () => {
         <a href="/test" id="link">Title</a>
       </div>
     `;
-    instance = anchorClick();
+    instance = clickDelegation();
     const item = document.querySelector('[data-anchor-target]');
     expect(item.classList.contains('is-clickable')).toBe(false);
 
@@ -278,7 +278,7 @@ describe('anchorClick — MutationObserver', () => {
 // Timing (downUpTime)
 // ---------------------------------------------------------------------------
 
-describe('anchorClick — timing (downUpTime)', () => {
+describe('clickDelegation — timing (downUpTime)', () => {
   let instance;
 
   beforeEach(() => {
@@ -298,7 +298,7 @@ describe('anchorClick — timing (downUpTime)', () => {
       </div>
     `;
     const onClick = vi.fn();
-    instance = anchorClick({ onClick, downUpTime: 200 });
+    instance = clickDelegation({ onClick, downUpTime: 200 });
     const item = document.querySelector('[data-anchor-target]');
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
@@ -315,7 +315,7 @@ describe('anchorClick — timing (downUpTime)', () => {
       </div>
     `;
     const onClick = vi.fn();
-    instance = anchorClick({ onClick, downUpTime: 200 });
+    instance = clickDelegation({ onClick, downUpTime: 200 });
     const item = document.querySelector('[data-anchor-target]');
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
@@ -332,7 +332,7 @@ describe('anchorClick — timing (downUpTime)', () => {
       </div>
     `;
     const onClick = vi.fn();
-    instance = anchorClick({ onClick, downUpTime: 200 });
+    instance = clickDelegation({ onClick, downUpTime: 200 });
     const item = document.querySelector('[data-anchor-target]');
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true }));
@@ -347,7 +347,7 @@ describe('anchorClick — timing (downUpTime)', () => {
 // Modifier keys / new tab
 // ---------------------------------------------------------------------------
 
-describe('anchorClick — modifier keys', () => {
+describe('clickDelegation — modifier keys', () => {
   let instance;
   let openSpy;
 
@@ -367,7 +367,7 @@ describe('anchorClick — modifier keys', () => {
         <a href="/test" data-anchor>Title</a>
       </div>
     `;
-    instance = anchorClick();
+    instance = clickDelegation();
     const item = document.querySelector('[data-anchor-target]');
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 0 }));
@@ -382,7 +382,7 @@ describe('anchorClick — modifier keys', () => {
         <a href="/test" data-anchor>Title</a>
       </div>
     `;
-    instance = anchorClick();
+    instance = clickDelegation();
     const item = document.querySelector('[data-anchor-target]');
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 0 }));
@@ -397,7 +397,7 @@ describe('anchorClick — modifier keys', () => {
         <a href="/test" data-anchor>Title</a>
       </div>
     `;
-    instance = anchorClick();
+    instance = clickDelegation();
     const item = document.querySelector('[data-anchor-target]');
 
     window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, isPrimary: true, button: 1 }));
@@ -411,7 +411,7 @@ describe('anchorClick — modifier keys', () => {
 // Destroy
 // ---------------------------------------------------------------------------
 
-describe('anchorClick — destroy', () => {
+describe('clickDelegation — destroy', () => {
   let instance;
 
   beforeEach(() => {
@@ -426,7 +426,7 @@ describe('anchorClick — destroy', () => {
       </div>
     `;
     const onClick = vi.fn();
-    instance = anchorClick({ onClick });
+    instance = clickDelegation({ onClick });
     instance.destroy();
 
     const item = document.querySelector('[data-anchor-target]');
@@ -441,15 +441,15 @@ describe('anchorClick — destroy', () => {
 // Build and runtime safety
 // ---------------------------------------------------------------------------
 
-describe('anchorClick — build and runtime safety', () => {
-  it('keeps dist/anchorClick.js in sync with src/anchorClick.js', () => {
-    const src = readFileSync(resolve('src/anchorClick.js'), 'utf8');
-    const dist = readFileSync(resolve('dist/anchorClick.js'), 'utf8');
+describe('clickDelegation — build and runtime safety', () => {
+  it('keeps dist/clickDelegation.js in sync with src/clickDelegation.js', () => {
+    const src = readFileSync(resolve('src/clickDelegation.js'), 'utf8');
+    const dist = readFileSync(resolve('dist/clickDelegation.js'), 'utf8');
     expect(dist).toBe(src);
   });
 
   it('does not throw when evaluated without document (SSR/Node)', () => {
-    const source = readFileSync(resolve('src/anchorClick.js'), 'utf8');
+    const source = readFileSync(resolve('src/clickDelegation.js'), 'utf8');
     const context = {
       module: { exports: {} },
       exports: {},
@@ -460,13 +460,13 @@ describe('anchorClick — build and runtime safety', () => {
     expect(typeof context.module.exports).toBe('function');
   });
 
-  it('dist/anchorClick.esm.js exports a function as default', () => {
-    const esmSource = readFileSync(resolve('dist/anchorClick.esm.js'), 'utf8');
+  it('dist/clickDelegation.esm.js exports a function as default', () => {
+    const esmSource = readFileSync(resolve('dist/clickDelegation.esm.js'), 'utf8');
 
     // Must start with the factory assignment (build.js string-slice is intact)
-    expect(esmSource).toMatch(/^const anchorClick = \(function \(window\)/);
+    expect(esmSource).toMatch(/^const clickDelegation = \(function \(window\)/);
 
     // Must end with a proper default export
-    expect(esmSource).toMatch(/export default anchorClick;\s*$/);
+    expect(esmSource).toMatch(/export default clickDelegation;\s*$/);
   });
 });

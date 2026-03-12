@@ -1,4 +1,4 @@
-export interface AnchorClickOptions {
+export interface ClickDelegationOptions {
   /** Attribute on the clickable item. Default: `"data-anchor-target"` */
   parent?: string;
   /** Attribute on the target anchor. Default: `"data-anchor"` */
@@ -13,11 +13,11 @@ export interface AnchorClickOptions {
   onClick?: (item: Element, link: HTMLAnchorElement) => void;
 }
 
-export interface AnchorClickInstance {
+export interface ClickDelegationInstance {
   /** Removes all event listeners, disconnects the MutationObserver and removes `clickableClass` from all items. */
   destroy(): void;
 }
 
-declare function anchorClick(options?: AnchorClickOptions): AnchorClickInstance;
+declare function clickDelegation(options?: ClickDelegationOptions): ClickDelegationInstance;
 
-export default anchorClick;
+export default clickDelegation;

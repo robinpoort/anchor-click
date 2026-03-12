@@ -6,7 +6,7 @@
   } else if (typeof exports === 'object') {
     module.exports = factory(root);
   } else {
-    root.anchorClick = factory(root);
+    root.clickDelegation = factory(root);
   }
 })(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function (window) {
 
@@ -14,7 +14,7 @@
     return () => ({ destroy() {} });
   }
 
-  return function anchorClick(options) {
+  return function clickDelegation(options) {
     const config = Object.assign({
       parent: 'data-anchor-target',
       link: 'data-anchor',

@@ -1,4 +1,4 @@
-# anchor-click
+# click-delegation
 
 Makes entire items clickable by delegating clicks to an anchor link within. Useful for layouts where you want a large clickable area while still keeping a single, explicit primary link target in complex card markup.
 
@@ -7,18 +7,18 @@ Handles text selection (no accidental navigation), Ctrl+click and middle-click (
 ## Installation
 
 ```
-npm install anchor-click
+npm install click-delegation
 ```
 
 Or include directly via a `<script>` tag:
 
 ```html
-<script src="anchorClick.min.js"></script>
+<script src="clickDelegation.min.js"></script>
 ```
 
 ## Usage
 
-Add `data-anchor-target` to any item and `data-anchor` to the anchor inside it, then call `anchorClick()`:
+Add `data-anchor-target` to any item and `data-anchor` to the anchor inside it, then call `clickDelegation()`:
 
 ```html
 <div data-anchor-target>
@@ -26,8 +26,8 @@ Add `data-anchor-target` to any item and `data-anchor` to the anchor inside it, 
   <p>Clicking anywhere on this item navigates to /page.</p>
 </div>
 
-<script src="anchorClick.min.js"></script>
-<script>anchorClick();</script>
+<script src="clickDelegation.min.js"></script>
+<script>clickDelegation();</script>
 ```
 
 The item automatically receives the class `is-clickable`, which you can use to style it:
@@ -43,7 +43,7 @@ The item automatically receives the class `is-clickable`, which you can use to s
 All options are optional. Defaults shown below:
 
 ```js
-const instance = anchorClick({
+const instance = clickDelegation({
   parent: 'data-anchor-target',   // attribute on the clickable item
   link: 'data-anchor',      // attribute on the target anchor
   ignore: 'data-anchor-ignore',   // attribute to exclude child elements
@@ -55,10 +55,10 @@ const instance = anchorClick({
 
 ## destroy()
 
-`anchorClick()` returns an instance with a `destroy()` method that removes all event listeners, disconnects the MutationObserver and removes `clickableClass` from all items. Useful in SPAs or when switching configurations.
+`clickDelegation()` returns an instance with a `destroy()` method that removes all event listeners, disconnects the MutationObserver and removes `clickableClass` from all items. Useful in SPAs or when switching configurations.
 
 ```js
-const instance = anchorClick();
+const instance = clickDelegation();
 
 // Later:
 instance.destroy();
@@ -69,7 +69,7 @@ instance.destroy();
 Use `onClick` to run custom logic when an item is navigated to — useful for analytics or state updates. The callback fires before navigation and cannot cancel it:
 
 ```js
-anchorClick({
+clickDelegation({
   onClick(item, link) {
     console.log('Navigating to', link.href);
   }

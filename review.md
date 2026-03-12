@@ -80,7 +80,7 @@ Evaluate whether the code follows modern JS practices:
 - avoidance of global scope pollution
 - avoidance of legacy patterns
 
-**Note:** this library intentionally uses a UMD wrapper (not ESM) to support plain `<script src>` usage without a bundler. An ESM build (`dist/anchorClick.esm.js`) is generated separately for bundlers. Evaluate the factory function internals for modern JS — do not flag the UMD wrapper itself as a legacy issue.
+**Note:** this library intentionally uses a UMD wrapper (not ESM) to support plain `<script src>` usage without a bundler. An ESM build (`dist/clickDelegation.esm.js`) is generated separately for bundlers. Evaluate the factory function internals for modern JS — do not flag the UMD wrapper itself as a legacy issue.
 
 Suggest improvements where useful.
 

@@ -1,16 +1,16 @@
 {
-  "name": "anchor-click",
+  "name": "click-delegation",
   "version": "1.0.1",
   "description": "Make entire item elements clickable by delegating clicks to an anchor link within",
-  "main": "dist/anchorClick.js",
-  "module": "dist/anchorClick.esm.js",
-  "types": "dist/anchorClick.d.ts",
+  "main": "dist/clickDelegation.js",
+  "module": "dist/clickDelegation.esm.js",
+  "types": "dist/clickDelegation.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/anchorClick.d.ts",
-      "import": "./dist/anchorClick.esm.js",
-      "require": "./dist/anchorClick.js",
-      "default": "./dist/anchorClick.js"
+      "types": "./dist/clickDelegation.d.ts",
+      "import": "./dist/clickDelegation.esm.js",
+      "require": "./dist/clickDelegation.js",
+      "default": "./dist/clickDelegation.js"
     }
   },
   "files": [
@@ -39,12 +39,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/robinpoort/anchor-click.git"
+    "url": "git+https://github.com/robinpoort/click-delegation.git"
   },
   "bugs": {
-    "url": "https://github.com/robinpoort/anchor-click/issues"
+    "url": "https://github.com/robinpoort/click-delegation/issues"
   },
-  "homepage": "https://github.com/robinpoort/anchor-click#readme",
+  "homepage": "https://github.com/robinpoort/click-delegation#readme",
   "devDependencies": {
     "@eslint/js": "^9.18.0",
     "eslint": "^9.18.0",

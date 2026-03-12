@@ -2,8 +2,8 @@ const { minify } = require('terser');
 const { readFileSync, writeFileSync, mkdirSync } = require('fs');
 const { join } = require('path');
 
-const SRC = join(__dirname, 'src', 'anchorClick.js');
-const SRC_TYPES = join(__dirname, 'src', 'anchorClick.d.ts');
+const SRC = join(__dirname, 'src', 'clickDelegation.js');
+const SRC_TYPES = join(__dirname, 'src', 'clickDelegation.d.ts');
 const DIST = join(__dirname, 'dist');
 
 async function build() {
@@ -12,21 +12,21 @@ async function build() {
   const source = readFileSync(SRC, 'utf8');
 
   // Copy source to dist/
-  writeFileSync(join(DIST, 'anchorClick.js'), source);
-  console.log(`dist/anchorClick.js: ${source.length} bytes`);
+  writeFileSync(join(DIST, 'clickDelegation.js'), source);
+  console.log(`dist/clickDelegation.js: ${source.length} bytes`);
 
   // Copy types to dist/
   const types = readFileSync(SRC_TYPES, 'utf8');
-  writeFileSync(join(DIST, 'anchorClick.d.ts'), types);
-  console.log(`dist/anchorClick.d.ts: ${types.length} bytes`);
+  writeFileSync(join(DIST, 'clickDelegation.d.ts'), types);
+  console.log(`dist/clickDelegation.d.ts: ${types.length} bytes`);
 
   // ESM build — extract the factory function from the UMD wrapper
   const factoryStart = source.indexOf(', function (window) {') + 2;
   const factoryEnd = source.lastIndexOf('\n});');
   const factory = source.slice(factoryStart, factoryEnd).trimEnd();
-  const esmSource = `const anchorClick = (${factory})(typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : this);\n\nexport default anchorClick;\n`;
-  writeFileSync(join(DIST, 'anchorClick.esm.js'), esmSource);
-  console.log(`dist/anchorClick.esm.js: ${esmSource.length} bytes`);
+  const esmSource = `const clickDelegation = (${factory})(typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : this);\n\nexport default clickDelegation;\n`;
+  writeFileSync(join(DIST, 'clickDelegation.esm.js'), esmSource);
+  console.log(`dist/clickDelegation.esm.js: ${esmSource.length} bytes`);
 
   // Minified build
   const minified = await minify(source, {
@@ -34,14 +34,14 @@ async function build() {
     mangle: true,
     output: { comments: false },
     sourceMap: {
-      filename: 'anchorClick.min.js',
-      url: 'anchorClick.min.js.map'
+      filename: 'clickDelegation.min.js',
+      url: 'clickDelegation.min.js.map'
     }
   });
-  writeFileSync(join(DIST, 'anchorClick.min.js'), minified.code);
-  writeFileSync(join(DIST, 'anchorClick.min.js.map'), minified.map);
-  console.log(`dist/anchorClick.min.js: ${minified.code.length} bytes`);
-  console.log(`dist/anchorClick.min.js.map: ${minified.map.length} bytes`);
+  writeFileSync(join(DIST, 'clickDelegation.min.js'), minified.code);
+  writeFileSync(join(DIST, 'clickDelegation.min.js.map'), minified.map);
+  console.log(`dist/clickDelegation.min.js: ${minified.code.length} bytes`);
+  console.log(`dist/clickDelegation.min.js.map: ${minified.map.length} bytes`);
 }
 
 build().catch((err) => {

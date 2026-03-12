@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>anchor-click — Visual Test</title>
+  <title>click-delegation — Visual Test</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
   <header id="site-header">
     <div class="header-inner">
-      <strong>anchor-click</strong>
+      <strong>click-delegation</strong>
       <span style="font-size: 0.85rem; opacity: 0.7;">Visual test page</span>
     </div>
   </header>
@@ -187,7 +187,7 @@
     <div id="log-entries" class="log-entries"></div>
   </div>
 
-  <script src="src/anchorClick.js"></script>
+  <script src="src/clickDelegation.js"></script>
   <script>
     // ==============================
     // Log
@@ -214,9 +214,9 @@
     // Init
     // ==============================
 
-    let instance = anchorClick();
+    let instance = clickDelegation();
 
-    anchorClick({
+    clickDelegation({
       parent: 'data-callback-item',
       link: 'data-callback-link',
       onClick: (item, link) => log(`onClick: href=${link.getAttribute('href')}`)
@@ -274,7 +274,7 @@
     });
 
     document.getElementById('btn-reinit').addEventListener('click', () => {
-      instance = anchorClick();
+      instance = clickDelegation();
       log('anchorClick() re-initialised');
     });
 
